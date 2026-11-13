@@ -30,9 +30,18 @@ people.forEach((p,i)=>{
  const type=shape(v['PM-003']||v['02-017']);
  const id=10000+i;
  const card=document.createElement('article');
- card.className='card';card.dataset.name=name;card.dataset.country=country;card.dataset.region=region;card.dataset.shape=type;card.dataset.score=score;card.dataset.id=id;
+ card.className='card';card.dataset.registryId=String(p.id||v['01-001']||'');card.dataset.name=name;card.dataset.country=country;card.dataset.region=region;card.dataset.shape=type;card.dataset.score=score;card.dataset.id=id;
  card.innerHTML='<div class="portrait"><span class="tag">注目 '+safe(score)+'</span><span style="font-size:66px;color:#d5b7ad">◉</span></div><div class="body"><h3>'+safe(name)+'</h3><small>'+safe(p.id||v['01-001']||'登録番号未設定')+' · '+safe(age)+'歳 · '+safe(country)+' / '+safe(region)+'</small><div class="stats"><div>身長<b>'+safe(ht)+'cm</b></div><div>体型<b>'+safe(type)+'</b></div><div>注目指数<b>'+safe(score)+'</b></div><div>身体サイズ<b>'+safe(b)+'/'+safe(w)+'/'+safe(h)+'</b></div></div><div class="actions"><button type="button" class="ufr-detail">詳細を見る</button><button type="button" class="outline ufr-compare">比較に追加</button></div></div>';
- card.querySelector('.ufr-detail').addEventListener('click',()=>window.showDetail(id));
+ card.querySelector('.ufr-detail').addEventListener('click',()=>{
+ const modal=document.getElementById('detail');
+ const openBtn=document.createElement('a');
+ openBtn.href='./index.html?person='+encodeURIComponent(card.dataset.registryId);
+ openBtn.textContent='📋 169項目の詳細プロフィールを開く →';
+ openBtn.style.cssText='display:block;margin-top:18px;padding:13px;border-radius:9px;background:#7a2940;color:#fff0d3;text-decoration:none;text-align:center;border:1px solid #e5bd79';
+ window.showDetail(id);
+ const body=document.getElementById('detailBody');
+ if(body)body.append(openBtn);
+});
  card.querySelector('.ufr-compare').addEventListener('click',()=>window.addCompare(id));
  root.prepend(card);countryList.add(country);added++;
 });
