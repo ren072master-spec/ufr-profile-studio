@@ -138,14 +138,18 @@ function value(f){const id=f.id,t=f.input_type;
  'BR-004':()=>rnd(20,85),'BR-005':()=>pick(ranks),'BR-006':()=>rnd(2,98),
  'BR-007':()=> '確定','BR-009':()=>`BRM-${rnd(100,999)}`,
  'BR-010':()=> '架空の行政指数。医学的検査値ではない。',
- 'PM-001':()=>Math.round(height*.235+rnd(-2,2)),
- 'PM-002':()=>rnd(26,36),'PM-003':()=>v('02-005')||rnd(60,80),
- 'PM-004':()=>v('02-006')||rnd(85,103),
- 'PM-005':()=>Math.round(height*.46+rnd(-3,3)),
- 'PM-006':()=>Math.round(height*.53+rnd(-3,3)),
- 'PM-007':()=>rnd(18,33),'PM-008':()=>rnd(17,28),
- 'PM-009':()=>pick(['標準','細身','運動型']),
- 'PM-010':()=> '身体寸法は架空の設定値。計測姿勢・衣服差を考慮した行政記録。'
+ 'PM-001':()=>today,
+ 'PM-002':()=>pick(['中央登録医療センター','地域医療検査局','指定医療機関']),
+ 'PM-003':()=>pick(['異常所見なし','軽度の皮膚刺激所見','経過観察']),
+ 'PM-004':()=>pick(['異常所見なし','軽度の皮膚刺激所見','経過観察']),
+ 'PM-005':()=>pick(['異常所見なし','軽度の皮膚刺激所見','経過観察']),
+ 'PM-006':()=>today,
+ 'PM-007':()=>pick(['自覚症状なし','軽い違和感の申告','経過観察希望']),
+ 'PM-008':()=>pick(['陰性','陰性','陰性','再検査指示']),
+ 'PM-009':()=>pick(['不要','定期検査継続','再診予定']),
+ 'PM-010':()=> '架空の医療診察記録。外観所見・問診情報を記録し、身体的価値判断は行わない。',
+ 'PM-011':()=>[`${today}｜部位別診察実施｜${pick(dept)}｜記録確定`]
+
  };
  if(names[id])return names[id]();
  if(t==='image')return v(id)||'';
@@ -160,7 +164,7 @@ function value(f){const id=f.id,t=f.input_type;
  return `${f.name}：${pick(dept)}にて登録確定`;
 }
 const early=['01-001','01-002','01-005','01-006','02-001','02-002','02-003','02-005','02-006','04-006','05-001','05-007','05-012','02-017','02-018'];
-function one(id){if(locks[id]||!map[id]||map[id].input_type==='image')return;put(id,value(map[id]));if(id==='01-002'&&!locks['01-003'])put('01-003',value(map['01-003']));if(id==='01-005'&&!locks['01-006'])put('01-006',value(map['01-006']));if(id==='02-001'||id==='02-002'){if(!locks['02-003'])put('02-003',value(map['02-003']))}if(id==='02-005'&&!locks['PM-003'])put('PM-003',v('02-005'));if(id==='02-006'&&!locks['PM-004'])put('PM-004',v('02-006'));}
+function one(id){if(locks[id]||!map[id]||map[id].input_type==='image')return;if(id.startsWith('PM-')&&v(id)!==undefined&&v(id)!==null&&typeof v(id)==='number'){const legacy='legacy-v08-'+id;if(v(legacy)===undefined)put(legacy,v(id));}put(id,value(map[id]));if(id==='01-002'&&!locks['01-003'])put('01-003',value(map['01-003']));if(id==='01-005'&&!locks['01-006'])put('01-006',value(map['01-006']));if(id==='02-001'||id==='02-002'){if(!locks['02-003'])put('02-003',value(map['02-003']))}}
 function all(newPerson){if(newPerson){const id='UFR-JP-'+rnd(100000,999999);people.unshift({id,name:'新規登録',age:24,values:{'01-001':id}});idx=0;locks={};}for(const id of early)one(id);for(const f of fields)if(!early.includes(f.id))one(f.id);save();render();paint();}
 function paint(){const tabs=G('genTabs');tabs.replaceChildren();[...new Set(fields.map(f=>f.category))].forEach(g=>{const b=document.createElement('button');b.textContent=g;b.className=g===currentTab?'on':'';b.onclick=()=>{currentTab=g;paint()};tabs.append(b)});const box=G('genFields');box.replaceChildren();for(const f of fields.filter(x=>x.category===currentTab)){const wrap=document.createElement('div');wrap.className='gen-item'+(['history','textarea','multi'].includes(f.input_type)?' wide':'');const lab=document.createElement('label');lab.textContent=f.id+' · '+f.name;wrap.append(lab);let input;const t=f.input_type,cur=v(f.id);if(t==='textarea'||t==='history'||t==='multi'){input=document.createElement('textarea');input.rows=2;input.value=Array.isArray(cur)?cur.join('\n'):String(cur??'')}else if(t==='boolean'){input=document.createElement('input');input.type='checkbox';input.checked=!!cur}else{input=document.createElement('input');input.type=t==='number'||t==='computed'?'number':t==='date'?'date':t==='datetime'?'datetime-local':'text';input.value=cur??'';if(t==='image')input.placeholder='画像は本体の編集欄で登録';input.readOnly=t==='image'||t==='computed'}input.onchange=()=>{let x=t==='boolean'?input.checked:t==='number'?Number(input.value):t==='history'||t==='multi'?input.value.split('\n').filter(Boolean):input.value;put(f.id,x);locks[f.id]=true;persist();save();render();paint()};wrap.append(input);const row=document.createElement('div');row.className='gen-row';const roll=document.createElement('button');roll.textContent='↻ この項目';roll.disabled=!!locks[f.id]||t==='image'||t==='computed';roll.onclick=()=>{one(f.id);save();render();paint()};const lock=document.createElement('button');lock.className='subtle';lock.textContent=locks[f.id]?'🔒 固定中':'🔓 固定';lock.onclick=()=>{locks[f.id]=!locks[f.id];persist();paint()};row.append(roll,lock);wrap.append(row);box.append(wrap)}G('genSummary').textContent=`全${fields.length}項目／固定 ${Object.values(locks).filter(Boolean).length}項目／${people[idx]?.name||''}（${people[idx]?.age||''}歳）`;}
 G('genOpen').onclick=()=>{loadLocks();G('genMask').classList.add('show');paint()};G('genClose').onclick=()=>G('genMask').classList.remove('show');G('genApply').onclick=()=>{save();render();G('genMask').classList.remove('show')};G('genAll').onclick=()=>{if(confirm('新しい架空キャラクターを作成します。現在のキャラクターは残します。')){all(true);persist()}};G('genUnlocked').onclick=()=>all(false);G('genUnlock').onclick=()=>{locks={};persist();paint()};
