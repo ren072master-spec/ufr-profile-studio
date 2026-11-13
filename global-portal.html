@@ -7,15 +7,18 @@
 const root=document.getElementById('cards');
 const safe=(v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let people=[];
-try{people=JSON.parse(localStorage.getItem('ufr-studio-v02')||'[]')}catch(e){console.warn('UFR registry unavailable',e)}
-if(!Array.isArray(people))people=[];
+try{
+ const saved=JSON.parse(localStorage.getItem('ufr-studio-v02')||localStorage.getItem('ufr-studio-v1')||'[]');
+ people=Array.isArray(saved)?saved:(Array.isArray(saved?.people)?saved.people:[]);
+}catch(e){console.warn('UFR registry unavailable',e);people=[]}
+
 const countryMap={'日本':'日本','日本国':'日本','Japan':'日本','USA':'アメリカ','United States':'アメリカ','アメリカ合衆国':'アメリカ','フランス共和国':'フランス','France':'フランス','Singapore':'シンガポール','Brazil':'ブラジル'};
 function shape(v){const x=String(v||'');if(/スレンダー|細身|痩せ/.test(x))return 'スレンダー';if(/グラマー|曲線|豊満/.test(x))return 'グラマー';if(/筋肉|スポーツ|スポーティ/.test(x))return '筋肉質';return '標準'}
 const countryList=new Set();
 let added=0;
 people.forEach((p,i)=>{
  const v=p&&p.values||{};
- const age=Number(v['01-006']??p.age??0);
+ const age=Number(v['01-006']||p.age||0);
  if(!Number.isFinite(age)||age<18)return;
  const name=String(v['01-002']||p.name||'未登録');
  const rawCountry=String(v['01-007']||p.nationality||'未登録');
