@@ -1,0 +1,83 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1d1015"><meta name="apple-mobile-web-app-capable" content="yes"><title>UFR Visual Fit Engine</title><style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#f1e7df;background:#110e12}*{box-sizing:border-box}body{margin:0}header{padding:20px;background:#211117;border-bottom:1px solid #a77b55}h1{font:25px Georgia,serif;color:#eac58d;margin:4px 0}h2{font-size:18px;color:#eac58d;margin:0 0 12px}p,small{color:#c6aaa5;line-height:1.55}main{max-width:1000px;margin:auto;padding:16px;display:grid;gap:16px}section{background:#21191e;border:1px solid #62434c;border-radius:12px;padding:16px}label{font-size:13px;color:#e6d2c7;display:block;margin:0 0 6px}input,select,textarea{width:100%;padding:11px;background:#130f13;border:1px solid #775660;color:#f4e7dc;border-radius:8px;font:inherit}input[type=checkbox]{width:auto}button{border:1px solid #b18a61;background:#512733;color:#f8e6d3;border-radius:8px;padding:10px 13px;font:inherit;cursor:pointer}button.secondary{background:#30252c;border-color:#705660}button:disabled{opacity:.5}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.photos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.photo{border:1px solid #76545d;border-radius:9px;padding:10px}.photo img{display:block;width:100%;height:180px;object-fit:contain;background:#110d11;border-radius:6px;margin:8px 0}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.pill{font-size:11px;border:1px solid #8b6a60;border-radius:99px;padding:3px 8px;color:#dfc5b8}.warn{border-left:3px solid #d4a25b;padding:9px;background:#38271f;margin:8px 0}.good{border-left:3px solid #7fa99b;padding:9px;background:#20312d;margin:8px 0}.metric{padding:10px;border:1px solid #65434d;border-radius:8px}.metric strong{font-size:19px}.metric small{display:block}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.note{font-size:12px}.field{min-width:0}a{color:#f4cb87}.check{display:flex;gap:8px;align-items:center;font-size:12px;margin-top:8px}.check label{margin:0}.bar{height:8px;border-radius:6px;background:#4a353c;overflow:hidden}.bar span{height:100%;display:block;background:#9bbcae}@media(max-width:580px){.grid,.photos{grid-template-columns:1fr}} </style></head><body>
+<header><a href="./index.html">← UFR Studioに戻る</a><h1>UFR VISUAL FIT ENGINE</h1><small>v0.3 / 架空成人キャラクターの設定支援 — 端末内で動作</small></header>
+<main>
+<section><h2>01｜キャラクター</h2><div class="grid"><div><label>氏名</label><input id="name" value="成瀬 朱莉"></div><div><label>登録番号</label><input id="reg" value="UFR-JP-084217"></div></div><p class="note">このページは独立した設定ワークスペースです。既存のUFR登録データを自動変更しません。</p></section>
+<section><h2>02｜参考写真（任意）</h2><p class="note">正面・横・後ろ・追加画像を登録できます。画像はこの端末内でプレビューし、サーバーには送信しません。現バージョンは画像のAI解析を行いません。</p><div id="photos" class="photos"></div></section>
+<section><h2>03｜固定条件（空欄は自動生成）</h2><p class="note">値を入力すると固定条件になります。空欄の項目だけ生成し、個別の再生成もできます。</p><div class="grid" id="inputs"></div><div class="actions"><button id="generate">未指定項目を一括生成</button><button class="secondary" id="clear">生成値だけクリア</button></div></section>
+<section><h2>04｜設定候補と部分ガチャ</h2><div class="grid" id="results"></div></section>
+<section><h2>05｜整合性チェック</h2><div id="report"></div><p class="note">「整合性」は入力した数値間のルール検査です。写真との一致率・実測精度を表すスコアではありません。写真の分析はAI接続後の機能です。</p></section>
+<section><h2>06｜保存・書き出し</h2><div class="actions"><button id="save">この端末に保存</button><button class="secondary" id="export">設定JSONを書き出す</button><button class="secondary" id="import">JSONを読み込む</button><input id="importFile" type="file" accept=".json,application/json" hidden></div><p id="status" class="note"></p><p class="note">iPhoneのホーム画面版とSafari版では保存領域が異なる場合があります。JSONバックアップを推奨します。</p></section>
+</main><script>
+const $=id=>document.getElementById(id), key='ufr_visual_fit_v03';
+const defs=[
+{id:'height',label:'身長',unit:'cm',min:140,max:185,step:1,base:164},
+{id:'weight',label:'体重',unit:'kg',min:38,max:85,step:1,base:53},
+{id:'shoulder',label:'肩幅',unit:'cm',min:32,max:47,step:1,base:38},
+{id:'top',label:'トップバスト',unit:'cm',min:70,max:115,step:1,base:88},
+{id:'under',label:'アンダーバスト',unit:'cm',min:60,max:95,step:1,base:70},
+{id:'waist',label:'ウエスト',unit:'cm',min:55,max:100,step:1,base:67},
+{id:'hip',label:'ヒップ',unit:'cm',min:75,max:120,step:1,base:92}
+];
+const extras=[{id:'cup',label:'ブラカップ',options:['','A','B','C','D','E','F','G','H']},{id:'braBand',label:'ブラのアンダー表記',options:['','65','70','75','80','85','90']},{id:'shorts',label:'ショーツ表記',options:['','XS','S','M','L','LL','3L']}];
+let state={name:'成瀬 朱莉',reg:'UFR-JP-084217',fixed:{},generated:{},photos:{},locks:{}};
+try{const stored=JSON.parse(localStorage.getItem(key));if(stored&&typeof stored==='object')state={...state,...stored,photos:{}}}catch{}
+function n(id){let x=state.fixed[id];return x!==undefined&&x!==''?Number(x):state.generated[id]}
+function random(a,b){return Math.round(a+Math.random()*(b-a))}
+function normal(base,range){return Math.round(base+(Math.random()+Math.random()+Math.random()-1.5)*range)}
+function generateOne(id){
+ if(state.fixed[id]!==undefined&&state.fixed[id]!=='')return;
+ if(state.locks[id]&&state.generated[id]!==undefined)return;
+ const h=n('height')||164,w=n('weight'),under=n('under'),top=n('top'),cup=state.fixed.cup||state.generated.cup;
+ let v;
+ switch(id){
+ case 'height':v=random(152,172);break;
+ case 'weight':v=normal(53+(h-164)*.55,12);break;
+ case 'shoulder':v=normal(38+(h-164)*.13,5);break;
+ case 'under':v=normal(70+(h-164)*.14+((w||53)-53)*.18,6);break;
+ case 'top':v=normal((under||70)+({A:10,B:12.5,C:15,D:17.5,E:20,F:22.5,G:25,H:27.5}[cup]||17.5),5);break;
+ case 'waist':v=normal(67+(h-164)*.12+((w||53)-53)*.45,8);break;
+ case 'hip':v=normal(92+(h-164)*.17+((w||53)-53)*.38,8);break;
+ default:return;
+ }
+ const d=defs.find(d=>d.id===id);state.generated[id]=Math.max(d.min,Math.min(d.max,v));
+}
+function generateAll(){['height','weight','shoulder','under','top','waist','hip'].forEach(generateOne);render()}
+function check(){
+ let issues=[],infos=[];
+ const h=n('height'),w=n('weight'),t=n('top'),u=n('under'),wa=n('waist'),hip=n('hip');
+ if(t!=null&&u!=null&&t<=u)issues.push('トップバストはアンダーバストより大きい数値にしてください。');
+ const cup=state.fixed.cup||state.generated.cup,band=state.fixed.braBand;
+ const diff={A:10,B:12.5,C:15,D:17.5,E:20,F:22.5,G:25,H:27.5};
+ if(cup&&t!=null&&u!=null&&Math.abs((t-u)-diff[cup])>4)issues.push('カップ表記とトップ・アンダーの差に開きがあります（メーカー差あり）。');
+ if(band&&u!=null&&Math.abs(Number(band)-u)>5)issues.push('ブラのアンダー表記と入力したアンダー寸法に差があります。');
+ if(h!=null&&w!=null){let bmi=w/(h/100)**2;if(bmi<15||bmi>35)infos.push('身長と体重の組み合わせが一般的な範囲から離れています。架空設定として再確認できます。');}
+ if(wa!=null&&hip!=null&&wa>hip+10)infos.push('ウエストとヒップの設定を確認してください（体型の多様性があるため断定はしません）。');
+ if(state.fixed.shorts)infos.push('ショーツ表記はブランド・商品差が大きいため、ヒップ実寸との一致判定には使用していません。');
+ const photoCount=Object.keys(state.photos).length;
+ $('report').innerHTML='';
+ const line=(message,cls)=>{const d=document.createElement('div');d.className=cls;d.textContent=message;$('report').append(d)};
+ if(!issues.length)line('入力値間の明確な数値矛盾は見つかりませんでした。','good');
+ issues.forEach(s=>line('要確認：'+s,'warn'));infos.forEach(s=>line('参考：'+s,'warn'));
+ line('写真資料：'+photoCount+'枠登録。画像との一致判定：未実装（AI解析なし）。','good');
+}
+function render(){
+ $('name').value=state.name;$('reg').value=state.reg;
+ $('inputs').replaceChildren();
+ for(const d of defs){const div=document.createElement('div');div.className='field';const l=document.createElement('label');l.textContent=d.label+'（'+d.unit+'）';const inp=document.createElement('input');inp.type='number';inp.placeholder='自動生成';inp.min=d.min;inp.max=d.max;inp.value=state.fixed[d.id]??'';inp.onchange=()=>{const v=inp.value.trim();if(v==='')delete state.fixed[d.id];else state.fixed[d.id]=Number(v);render()};div.append(l,inp);$('inputs').append(div)}
+ for(const d of extras){const div=document.createElement('div');const l=document.createElement('label');l.textContent=d.label;const s=document.createElement('select');for(const v of d.options){const o=document.createElement('option');o.value=v;o.textContent=v||'自動／未指定';s.append(o)}s.value=state.fixed[d.id]??'';s.onchange=()=>{if(s.value)state.fixed[d.id]=s.value;else delete state.fixed[d.id];render()};div.append(l,s);$('inputs').append(div)}
+ $('results').replaceChildren();
+ for(const d of defs){const fixed=state.fixed[d.id]!==undefined&&state.fixed[d.id]!=='';const div=document.createElement('div');div.className='metric';const title=document.createElement('div');const strong=document.createElement('strong');strong.textContent=(n(d.id)??'—')+' '+d.unit;title.textContent=d.label+'　';title.append(strong);div.append(title);const tag=document.createElement('small');tag.textContent=fixed?'🔒 ユーザー指定':n(d.id)!==undefined?'🎲 創作補完':'未生成';div.append(tag);const row=document.createElement('div');row.className='actions';const reroll=document.createElement('button');reroll.className='secondary';reroll.textContent='↻ この項目だけ';reroll.disabled=fixed||!!state.locks[d.id];reroll.onclick=()=>{delete state.generated[d.id];generateOne(d.id);render()};row.append(reroll);const lock=document.createElement('button');lock.className='secondary';lock.textContent=state.locks[d.id]?'🔒 ロック中':'🔓 ロック';lock.disabled=fixed;lock.onclick=()=>{state.locks[d.id]=!state.locks[d.id];render()};row.append(lock);div.append(row);$('results').append(div)}
+ check()
+}
+const photoLabels=[['front','正面'],['side','側面'],['back','背面'],['extra','追加写真']];
+for(const [id,label] of photoLabels){const box=document.createElement('div');box.className='photo';const l=document.createElement('label');l.textContent=label;const input=document.createElement('input');input.type='file';input.accept='image/*';const img=document.createElement('img');img.alt=label+'写真';img.style.display='none';const info=document.createElement('small');info.textContent='未登録';input.onchange=()=>{const f=input.files?.[0];if(!f)return;if(f.size>12*1024*1024){alert('12MB以下の画像を選択してください');return}if(state.photos[id])URL.revokeObjectURL(state.photos[id]);state.photos[id]=URL.createObjectURL(f);img.src=state.photos[id];img.style.display='block';info.textContent='画像を読み込みました（このセッションのみ）';check()};box.append(l,input,img,info);$('photos').append(box)}
+$('name').onchange=e=>state.name=e.target.value;$('reg').onchange=e=>state.reg=e.target.value;
+$('generate').onclick=generateAll;
+$('clear').onclick=()=>{state.generated={};render()};
+$('save').onclick=()=>{state.name=$('name').value;state.reg=$('reg').value;try{localStorage.setItem(key,JSON.stringify({...state,photos:{}}));$('status').textContent='保存しました（画像は保存されません）'}catch(e){$('status').textContent='保存失敗：'+e.message}};
+function download(content,name){const a=document.createElement('a'),u=URL.createObjectURL(new Blob([content],{type:'application/json'}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+$('export').onclick=()=>download(JSON.stringify({version:'0.3-visual-fit',name:$('name').value,reg:$('reg').value,fixed:state.fixed,generated:state.generated,locks:state.locks,notice:'fictional settings, not image measurements'},null,2),'ufr-visual-fit-v03.json');
+$('import').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;const data=JSON.parse(await f.text());if(!data||typeof data!=='object'||!data.fixed||!data.generated)throw Error('Visual Fit形式ではありません');state={...state,name:String(data.name||''),reg:String(data.reg||''),fixed:data.fixed,generated:data.generated,locks:data.locks||{}};render();$('status').textContent='読み込みました'}catch(err){alert('読み込み失敗：'+err.message)}e.target.value=''};
+render();
+</script></body></html>
