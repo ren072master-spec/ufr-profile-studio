@@ -56,7 +56,7 @@ function history(type){const city=v('01-010')||'登録地域',job=v('04-006')||'
  '07-019':`${today}｜監査担当${office}／整合性確認済み`,
  'SI-006':`${today}｜国家認証情報を更新`,
  'BR-008':`${today}｜定期指数更新／審査済み`,
- 'PM-011':`${today}｜精密身体計測・再計算済み`
+ 'PM-011':`${today}｜部位別診察台帳・更新済み`
  };return lines[type]||`${start}｜初回登録照合済み\n${today}｜${office}による定期更新完了`}
 function value(f){const id=f.id,t=f.input_type;
  const age=Number(v('01-006'))||24,height=Number(v('02-001'))||162,weight=Number(v('02-002'))||52;
@@ -83,7 +83,7 @@ function value(f){const id=f.id,t=f.input_type;
  '02-013':()=>`識別特徴：左手首に小さなほくろ／照合精度${rnd(96,99)}%（架空）`,
  '02-014':()=>today,'02-015':()=>pick(dept),
  '02-017':()=>pick(ranks),'02-018':()=>rnd(2,98),'02-019':()=>today,
- '02-020':()=>`外見登録審査済み。姿勢・服装に伴う変動は評価対象外。`,
+ '02-020':()=>pick(['外見登録を確定。登録者本人への記録開示は行わない。','身体記録は認可閲覧者向けに更新。本人による修正は不可。','服装・姿勢の影響を注記したうえで記録確定。閲覧権限は管理側に限定。']),
  '03-001':()=> '完了','03-002':()=>dateAfter18(),'03-003':()=> '実施済み','03-004':()=>`${d.getFullYear()+1}-05-15`,
  '03-005':()=>pick(['地域総合医療センター','中央検査機構','第2登録医療局']),
  '03-007':()=>['重大既往歴0件','登録済み'],'03-008':()=>['継続治療0件','定期診察済み'],
@@ -112,7 +112,7 @@ function value(f){const id=f.id,t=f.input_type;
  '05-013':()=>Number(v('05-012'))?Array.from({length:Number(v('05-012'))},()=>`CH-${rnd(100000,999999)}`):['該当者0名'],
  '05-015':()=>Number(v('05-012'))?'世帯法定管理者：登録済み':'対象外',
  '05-017':()=>Number(v('05-012'))?'養育状況：定期照合済み':'対象外',
- '05-019':()=>`世帯構成・扶養情報の照合完了。`,
+ '05-019':()=>pick(['世帯構成を確定。本人による閲覧・訂正は管理者承認制。','世帯記録を管理権限者へ共有。本人への変更通知は省略。','扶養関係を照合。異議申立ては記録のみ保全し、処理を継続。']),
  '05-020':()=>today,
  '06-001':()=>v('02-017')||pick(ranks),'06-002':()=>v('02-018')||rnd(2,98),
  '06-003':()=>pick(ranks),'06-004':()=>rnd(2,98),
@@ -124,7 +124,7 @@ function value(f){const id=f.id,t=f.input_type;
  '06-017':()=>v('05-007')==='有効'?'保護登録反映済み':'通常管理',
  '06-018':()=>pick(['基礎生活保障A','基礎生活保障B']),
  '06-019':()=>rnd(8,16)*10000,
- '06-020':()=>`国家登録制度に基づく行政上の架空評価。評価根拠は照合済み。`,
+ '06-020':()=>pick([`行政評価${v('06-001')||'B'}を確定。本人による審査資料の閲覧は認められない。`,`生活保障と監督区分を管理側で決定。本人の希望は審査要件に含まれない。`,`記録は認可閲覧者へ公開。本人に訂正権限は付与されない。`]),
  '07-001':()=> '有効','07-002':()=>dateAfter18()+'T09:00','07-003':()=>dateAfter18()+'T09:05',
  '07-004':()=> '公開','07-005':()=> '全域公開','07-006':()=>datetime,
  '07-008':()=>rnd(2,30),'07-009':()=>['住民台帳','教育台帳','検査台帳'],
@@ -134,22 +134,29 @@ function value(f){const id=f.id,t=f.input_type;
  'SI-001':()=>`SI-${rnd(100000,999999)}`,'SI-003':()=>dateAfter18(),
  'SI-004':()=>pick(dept),'SI-005':()=> '認証済',
  'SI-007':()=>`SEAL-${rnd(100000,999999)}`,
- 'SI-008':()=> '認証符号・原本照合完了。',
+ 'SI-008':()=>pick(['認証符号を確定。本人への原本交付は禁止。','認証台帳を更新。認可閲覧者への照会に対応。','本人の異議を受理せず、登録を継続。']),
  'BR-001':()=>`BR-${rnd(100000,999999)}`,'BR-002':()=>today,'BR-003':()=>pick(dept),
  'BR-004':()=>rnd(20,85),'BR-005':()=>pick(ranks),'BR-006':()=>rnd(2,98),
  'BR-007':()=> '確定','BR-009':()=>`BRM-${rnd(100,999)}`,
- 'BR-010':()=> '架空の行政指数。医学的検査値ではない。',
+ 'BR-010':()=>pick(['架空行政指数を確定。本人による評価根拠の照会は不可。','指数改定は管理局権限。本人の意見は採点対象外。','認可閲覧者向けの分類指数。医学的測定値ではない。']),
  'PM-001':()=>today,
  'PM-002':()=>pick(['中央登録医療センター','地域医療検査局','指定医療機関']),
- 'PM-003':()=>pick(['異常所見なし','軽度の皮膚刺激所見','経過観察']),
- 'PM-004':()=>pick(['異常所見なし','軽度の皮膚刺激所見','経過観察']),
- 'PM-005':()=>pick(['異常所見なし','軽度の皮膚刺激所見','経過観察']),
+ 'PM-003':()=>pick(['診察区分A／基準内。本人への説明手続きは省略','診察区分B／軽微な所見あり。再評価は管理局判断','診察区分A／記録確定。本人閲覧権限なし','診察区分C／経過観察。日程変更の申請権なし']),
+ 'PM-004':()=>pick(['確認区分A／登録基準内。詳細は閲覧権限者のみ開示','確認区分B／再確認対象。本人への通知は省略','確認区分A／照合済み。訂正申請は管理局経由','確認区分C／監督記録へ転記済み']),
+ 'PM-005':()=>pick(['周辺所見：基準内。行政台帳に自動反映','周辺所見：軽微な変動あり。本人への照会不要','周辺所見：継続観察。閲覧は認可者に限定','周辺所見：照合完了。更新通知は発行しない']),
  'PM-006':()=>today,
- 'PM-007':()=>pick(['自覚症状なし','軽い違和感の申告','経過観察希望']),
- 'PM-008':()=>pick(['陰性','陰性','陰性','再検査指示']),
- 'PM-009':()=>pick(['不要','定期検査継続','再診予定']),
- 'PM-010':()=> '架空の医療診察記録。外観所見・問診情報を記録し、身体的価値判断は行わない。',
- 'PM-011':()=>[`${today}｜部位別診察実施｜${pick(dept)}｜記録確定`]
+ 'PM-007':()=>pick(['本人申告：症状なし。申告内容の閲覧権限は本人に付与されない','本人申告：軽微な違和感。再診要否は管理側が決定','本人申告：説明希望あり。規定により回答対象外','本人申告：異議あり。記録は保全し処理を継続']),
+ 'PM-008':()=>pick(['検査判定A／確定。本人通知は不要','検査判定B／要再照合。管理局のみ詳細閲覧可','検査判定A／前回値との差異なし。原本は中央保管','検査判定C／再検査を行政指定日に実施']),
+ 'PM-009':()=>pick(['定期確認のみ。日時は行政側が指定','再確認を指示。本人都合による変更は原則不可','継続管理。結果開示先は登録権限者のみ','追加措置なし。記録は永久保存区分']),
+ 'PM-010':()=>pick([
+  '医療所見は基準内。本人への説明は制度上の必須手続きに含まれない。閲覧権限者の照会に備え記録を確定。',
+  '登録者から結果照会の希望があったが、閲覧資格を有しないため受理せず。検査結果は管理台帳へ転送済み。',
+  '所見に軽微な変動を認める。再評価は中央登録局が指定し、本人の同意取得は手続き対象外とする。',
+  '部位別診察結果を管理番号に紐付け。本人に対する写しの交付は不可。認可閲覧者への公開を継続。',
+  '定期診察完了。本人の異議申立ては参考情報として保存し、確定記録の変更理由とはしない。',
+  '所見は行政基準内。次回確認は自動割当て。本人への日程選択権は付与しない。'
+ ]),
+ 'PM-011':()=>[`${dateAfter18()}｜成人登録時検査｜本人閲覧権限なし`,`${today}｜${pick(dept)}｜${pick(['定期診察確定／通知省略','結果を認可閲覧者向け台帳へ転送','本人の照会申請は受付対象外','再評価日を行政指定'])}`]
 
  };
  if(names[id])return names[id]();
@@ -167,6 +174,6 @@ function value(f){const id=f.id,t=f.input_type;
 const early=['01-001','01-002','01-005','01-006','02-001','02-002','02-003','02-005','02-006','04-006','05-001','05-007','05-012','02-017','02-018'];
 function one(id){if(locks[id]||!map[id]||map[id].input_type==='image')return;if(id.startsWith('PM-')&&v(id)!==undefined&&v(id)!==null&&typeof v(id)==='number'){const legacy='legacy-v08-'+id;if(v(legacy)===undefined)put(legacy,v(id));}put(id,value(map[id]));if(id==='01-002'&&!locks['01-003'])put('01-003',value(map['01-003']));if(id==='01-005'&&!locks['01-006'])put('01-006',value(map['01-006']));if(id==='02-001'||id==='02-002'){if(!locks['02-003'])put('02-003',value(map['02-003']))}}
 function all(newPerson){if(newPerson){const id='UFR-JP-'+rnd(100000,999999);bridge.people.unshift({id,name:'新規登録',age:24,values:{'01-001':id}});bridge.setIndex(0);locks={};}for(const id of early)one(id);for(const f of fields)if(!early.includes(f.id))one(f.id);bridge.save();bridge.render();paint();}
-function paint(){const tabs=G('genTabs');tabs.replaceChildren();[...new Set(fields.map(f=>f.category))].forEach(g=>{const b=document.createElement('button');b.textContent=g;b.className=g===currentTab?'on':'';b.onclick=()=>{currentTab=g;paint()};tabs.append(b)});const box=G('genFields');box.replaceChildren();for(const f of fields.filter(x=>x.category===currentTab)){const wrap=document.createElement('div');wrap.className='gen-item'+(['history','textarea','multi'].includes(f.input_type)?' wide':'');const lab=document.createElement('label');lab.textContent=f.id+' · '+f.name;wrap.append(lab);let input;const t=f.input_type,cur=v(f.id);if(t==='textarea'||t==='history'||t==='multi'){input=document.createElement('textarea');input.rows=2;input.value=Array.isArray(cur)?cur.join('\n'):String(cur??'')}else if(t==='boolean'){input=document.createElement('input');input.type='checkbox';input.checked=!!cur}else{input=document.createElement('input');input.type=t==='number'||t==='computed'?'number':t==='date'?'date':t==='datetime'?'datetime-local':'text';input.value=cur??'';if(t==='image')input.placeholder='画像は本体の編集欄で登録';input.readOnly=t==='image'||t==='computed'}input.onchange=()=>{let x=t==='boolean'?input.checked:t==='number'?Number(input.value):t==='history'||t==='multi'?input.value.split('\n').filter(Boolean):input.value;put(f.id,x);locks[f.id]=true;persist();bridge.save();bridge.render();paint()};wrap.append(input);const row=document.createElement('div');row.className='gen-row';const roll=document.createElement('button');roll.textContent='↻ この項目';roll.disabled=!!locks[f.id]||t==='image'||t==='computed';roll.onclick=()=>{one(f.id);save();render();paint()};const lock=document.createElement('button');lock.className='subtle';lock.textContent=locks[f.id]?'🔒 固定中':'🔓 固定';lock.onclick=()=>{locks[f.id]=!locks[f.id];persist();paint()};row.append(roll,lock);wrap.append(row);box.append(wrap)}G('genSummary').textContent=`全${fields.length}項目／固定 ${Object.values(locks).filter(Boolean).length}項目／${bridge.people[bridge.getIndex()]?.name||''}（${bridge.people[bridge.getIndex()]?.age||''}歳）`;}
+function paint(){const tabs=G('genTabs');tabs.replaceChildren();[...new Set(fields.map(f=>f.category))].forEach(g=>{const b=document.createElement('button');b.textContent=g;b.className=g===currentTab?'on':'';b.onclick=()=>{currentTab=g;paint()};tabs.append(b)});const box=G('genFields');box.replaceChildren();for(const f of fields.filter(x=>x.category===currentTab)){const wrap=document.createElement('div');wrap.className='gen-item'+(['history','textarea','multi'].includes(f.input_type)?' wide':'');const lab=document.createElement('label');lab.textContent=f.id+' · '+f.name;wrap.append(lab);let input;const t=f.input_type,cur=v(f.id);if(t==='textarea'||t==='history'||t==='multi'){input=document.createElement('textarea');input.rows=2;input.value=Array.isArray(cur)?cur.join('\n'):String(cur??'')}else if(t==='boolean'){input=document.createElement('input');input.type='checkbox';input.checked=!!cur}else{input=document.createElement('input');input.type=t==='number'||t==='computed'?'number':t==='date'?'date':t==='datetime'?'datetime-local':'text';input.value=cur??'';if(t==='image')input.placeholder='画像は本体の編集欄で登録';input.readOnly=t==='image'||t==='computed'}input.onchange=()=>{let x=t==='boolean'?input.checked:t==='number'?Number(input.value):t==='history'||t==='multi'?input.value.split('\n').filter(Boolean):input.value;put(f.id,x);locks[f.id]=true;persist();bridge.save();bridge.render();paint()};wrap.append(input);const row=document.createElement('div');row.className='gen-row';const roll=document.createElement('button');roll.textContent='↻ この項目';roll.disabled=!!locks[f.id]||t==='image'||t==='computed';roll.onclick=()=>{one(f.id);bridge.save();bridge.render();paint()};const lock=document.createElement('button');lock.className='subtle';lock.textContent=locks[f.id]?'🔒 固定中':'🔓 固定';lock.onclick=()=>{locks[f.id]=!locks[f.id];persist();paint()};row.append(roll,lock);wrap.append(row);box.append(wrap)}G('genSummary').textContent=`全${fields.length}項目／固定 ${Object.values(locks).filter(Boolean).length}項目／${bridge.people[bridge.getIndex()]?.name||''}（${bridge.people[bridge.getIndex()]?.age||''}歳）`;}
 G('genOpen').onclick=()=>{loadLocks();G('genMask').classList.add('show');paint()};G('genClose').onclick=()=>G('genMask').classList.remove('show');G('genApply').onclick=()=>{bridge.save();bridge.render();G('genMask').classList.remove('show')};G('genAll').onclick=()=>{try{all(true);persist();G('genSummary').textContent+=' ／ 新規人物を生成しました';}catch(e){console.error('UFR generator:',e);G('genSummary').textContent='生成エラー：'+e.message;alert('生成に失敗しました：'+e.message)}};G('genUnlocked').onclick=()=>{try{all(false)}catch(e){console.error(e);G('genSummary').textContent='再生成エラー：'+e.message}};G('genUnlock').onclick=()=>{locks={};persist();paint()};
 })();
