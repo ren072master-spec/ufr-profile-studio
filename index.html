@@ -99,8 +99,8 @@ people.forEach((p,i)=>{
  card.querySelector('.ufr-detail').addEventListener('click',()=>{
  const modal=document.getElementById('detail');
  const openBtn=document.createElement('a');
- openBtn.href='./editor.html?person='+encodeURIComponent(card.dataset.registryId);
- openBtn.textContent='📋 169項目の詳細プロフィールを開く →';
+ openBtn.href='./profile.html?person='+encodeURIComponent(card.dataset.registryId);
+ openBtn.textContent='📋 182項目の詳細プロフィールを開く →';
  openBtn.style.cssText='display:block;margin-top:18px;padding:13px;border-radius:9px;background:#7a2940;color:#fff0d3;text-decoration:none;text-align:center;border:1px solid #e5bd79';
  window.showDetail(id);
  const body=document.getElementById('detailBody');
