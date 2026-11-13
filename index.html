@@ -218,4 +218,34 @@ for(const card of document.querySelectorAll('#cards .card')){
  body.prepend(label);
 }
 })();
+</script><script>
+(function(){
+'use strict';
+const cards=[...document.querySelectorAll('#cards .card')];
+for(const card of cards){
+ const stats=card.querySelector('.stats');
+ if(!stats)continue;
+ const raw=stats.textContent||'';
+ const small=card.querySelector('.body small')?.textContent||'';
+ const isStored=!!card.dataset.registryId;
+ const value=(label)=>{const m=raw.match(new RegExp(label+'\\s*([^\\n]+?)(?=身長|体型|注目指数|身体サイズ|処女区分|$)'));return m?m[1].trim():'—'};
+ const height=card.dataset.height||((raw.match(/身長\s*([0-9.]+)/)||[])[1]);
+ const shape=card.dataset.shape||((raw.match(/体型\s*([^\s]+)/)||[])[1])||'—';
+ const score=card.dataset.score||((raw.match(/注目指数\s*(\d+)/)||[])[1])||'—';
+ const existing=raw.match(/身体サイズ\s*([\d.]+\s*\/\s*[\d.]+\s*\/\s*[\d.]+)/);
+ const size=existing?existing[1].replace(/\s/g,''):'—';
+ const items=[['身長',height?height+'cm':'—'],['体型',shape],['注目指数',score],['身体サイズ',size]];
+ stats.replaceChildren();
+ for(const [label,value] of items){
+  const cell=document.createElement('div'),bold=document.createElement('b');
+  cell.append(document.createTextNode(label));bold.textContent=value;cell.append(bold);stats.append(cell)
+ }
+ if(isStored){
+  const note=card.querySelector('.ufr-note');
+  if(note && !note.textContent.includes('処女区分')){
+   note.textContent+=' ／ 申告：登録情報を確認';
+  }
+ }
+}
+})();
 </script></body></html>
