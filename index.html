@@ -291,7 +291,11 @@ for(const card of document.querySelectorAll('#cards .card')){
  const illness=document.createElement('div');illness.className='ufr-health-line';
  // A blank medical history is unknown, not evidence of absence.
  const history=txt(v['03-008'],'未確認');
- illness.textContent='疾病記録：'+(history==='なし'||history==='特になし'?'記録なし':history.length>9?history.slice(0,8)+'…':history);
+ const normalized=history.replace(/\\s/g,'');
+ const noRecord=['なし','特になし','疾病なし','記録なし','該当なし','異常なし','0件'];
+ const status=normalized==='未確認'||normalized==='未登録'?'未確認'
+   :noRecord.includes(normalized)?'記録なし':'記録あり';
+ illness.textContent='疾病：'+status;
  health.append(pill,illness);left.append(health);
  const favorite=body.querySelector('.favorite');
  if(favorite){
