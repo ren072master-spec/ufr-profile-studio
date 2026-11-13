@@ -56,7 +56,7 @@ function history(type){const city=v('01-010')||'登録地域',job=v('04-006')||'
  '07-019':`${today}｜監査担当${office}／整合性確認済み`,
  'SI-006':`${today}｜国家認証情報を更新`,
  'BR-008':`${today}｜定期指数更新／審査済み`,
- 'PM-011':`${today}｜部位別診察台帳・更新済み`
+ 'PM-011':`${today}｜閲覧評価履歴・更新済み`
  };return lines[type]||`${start}｜初回登録照合済み\n${today}｜${office}による定期更新完了`}
 function value(f){const id=f.id,t=f.input_type;
  const age=Number(v('01-006'))||24,height=Number(v('02-001'))||162,weight=Number(v('02-002'))||52;
@@ -139,24 +139,17 @@ function value(f){const id=f.id,t=f.input_type;
  'BR-004':()=>rnd(20,85),'BR-005':()=>pick(ranks),'BR-006':()=>rnd(2,98),
  'BR-007':()=> '確定','BR-009':()=>`BRM-${rnd(100,999)}`,
  'BR-010':()=>pick(['架空行政指数を確定。本人による評価根拠の照会は不可。','指数改定は管理局権限。本人の意見は採点対象外。','認可閲覧者向けの分類指数。医学的測定値ではない。']),
- 'PM-001':()=>today,
- 'PM-002':()=>pick(['中央登録医療センター','地域医療検査局','指定医療機関']),
- 'PM-003':()=>pick(['診察区分A／基準内。本人への説明手続きは省略','診察区分B／軽微な所見あり。再評価は管理局判断','診察区分A／記録確定。本人閲覧権限なし','診察区分C／経過観察。日程変更の申請権なし']),
- 'PM-004':()=>pick(['確認区分A／登録基準内。詳細は閲覧権限者のみ開示','確認区分B／再確認対象。本人への通知は省略','確認区分A／照合済み。訂正申請は管理局経由','確認区分C／監督記録へ転記済み']),
- 'PM-005':()=>pick(['周辺所見：基準内。行政台帳に自動反映','周辺所見：軽微な変動あり。本人への照会不要','周辺所見：継続観察。閲覧は認可者に限定','周辺所見：照合完了。更新通知は発行しない']),
- 'PM-006':()=>today,
- 'PM-007':()=>pick(['本人申告：症状なし。申告内容の閲覧権限は本人に付与されない','本人申告：軽微な違和感。再診要否は管理側が決定','本人申告：説明希望あり。規定により回答対象外','本人申告：異議あり。記録は保全し処理を継続']),
- 'PM-008':()=>pick(['検査判定A／確定。本人通知は不要','検査判定B／要再照合。管理局のみ詳細閲覧可','検査判定A／前回値との差異なし。原本は中央保管','検査判定C／再検査を行政指定日に実施']),
- 'PM-009':()=>pick(['定期確認のみ。日時は行政側が指定','再確認を指示。本人都合による変更は原則不可','継続管理。結果開示先は登録権限者のみ','追加措置なし。記録は永久保存区分']),
- 'PM-010':()=>pick([
-  '医療所見は基準内。本人への説明は制度上の必須手続きに含まれない。閲覧権限者の照会に備え記録を確定。',
-  '登録者から結果照会の希望があったが、閲覧資格を有しないため受理せず。検査結果は管理台帳へ転送済み。',
-  '所見に軽微な変動を認める。再評価は中央登録局が指定し、本人の同意取得は手続き対象外とする。',
-  '部位別診察結果を管理番号に紐付け。本人に対する写しの交付は不可。認可閲覧者への公開を継続。',
-  '定期診察完了。本人の異議申立ては参考情報として保存し、確定記録の変更理由とはしない。',
-  '所見は行政基準内。次回確認は自動割当て。本人への日程選択権は付与しない。'
- ]),
- 'PM-011':()=>[`${dateAfter18()}｜成人登録時検査｜本人閲覧権限なし`,`${today}｜${pick(dept)}｜${pick(['定期診察確定／通知省略','結果を認可閲覧者向け台帳へ転送','本人の照会申請は受付対象外','再評価日を行政指定'])}`]
+ 'PM-001':()=>Math.min(99,Math.max(12,Math.round(60+((Number(v('02-004'))||88)-(Number(v('02-005'))||70))*0.65+((Number(v('02-006'))||92)-(Number(v('02-005'))||70))*0.45+rnd(-18,18)))),
+ 'PM-002':()=>Number(v('PM-001'))>=80?'高注目':Number(v('PM-001'))>=60?'標準以上':'一般',
+ 'PM-003':()=>pick(['細身シルエット','均整型シルエット','曲線型シルエット','スポーティ型シルエット']),
+ 'PM-004':()=>{const b=Number(v('02-004'))||88,w=Number(v('02-005'))||70;return b-w>=23?'上半身の輪郭が強調される構成':b-w>=13?'上半身の輪郭が明瞭':'直線的な上半身ライン'},
+ 'PM-005':()=>{const w=Number(v('02-005'))||70,h=Number(v('02-006'))||92,r=+(w/h).toFixed(2);return `WHR ${r}／${r<0.72?'くびれ強調型':r<0.82?'標準曲線型':'直線型'}`},
+ 'PM-006':()=>{const h=Number(v('02-001'))||162;return h>=170?'長身・縦長構成':h<=156?'小柄・コンパクト構成':'中背・均整構成'},
+ 'PM-007':()=>pick(['輪郭・シルエットへの関心が集中','全身バランスへの関心が優勢','衣装別の印象比較が多い','顔立ちと体型の総合評価が中心']),
+ 'PM-008':()=>{const a=[v('PM-003')||'均整型',v('PM-002')||'一般'];return [...a,pick(['衣装映え','高閲覧','都市部人気','クラシック志向'])]},
+ 'PM-009':()=>Math.max(10,Math.round((Number(v('07-014'))||300)*rnd(30,75)/100)),
+ 'PM-010':()=>`男性閲覧市場の公開評価：${v('PM-002')||'一般'}。${v('PM-003')||'均整型'}として分類。注目の中心は「${v('PM-007')||'全身バランス'}」。登録者本人の希望ではなく、閲覧者側の選好に基づく格付け。`,
+ 'PM-011':()=>[`${dateAfter18()}｜成人登録時の閲覧評価を開始`,`${today}｜注目指数 ${v('PM-001')||60}／${v('PM-002')||'一般'}として公開更新`]
 
  };
  if(names[id])return names[id]();
@@ -171,7 +164,7 @@ function value(f){const id=f.id,t=f.input_type;
  if(t==='select')return '確定';
  return `${f.name}：${pick(dept)}にて登録確定`;
 }
-const early=['01-001','01-002','01-005','01-006','02-001','02-002','02-003','02-005','02-006','04-006','05-001','05-007','05-012','02-017','02-018'];
+const early=['01-001','01-002','01-005','01-006','02-001','02-002','02-003','02-005','02-006','04-006','05-001','05-007','05-012','02-017','02-018','02-004','02-005','02-006','07-014','PM-001','PM-002','PM-003','PM-007'];
 function one(id){if(locks[id]||!map[id]||map[id].input_type==='image')return;if(id.startsWith('PM-')&&v(id)!==undefined&&v(id)!==null&&typeof v(id)==='number'){const legacy='legacy-v08-'+id;if(v(legacy)===undefined)put(legacy,v(id));}put(id,value(map[id]));if(id==='01-002'&&!locks['01-003'])put('01-003',value(map['01-003']));if(id==='01-005'&&!locks['01-006'])put('01-006',value(map['01-006']));if(id==='02-001'||id==='02-002'){if(!locks['02-003'])put('02-003',value(map['02-003']))}}
 function all(newPerson){if(newPerson){const id='UFR-JP-'+rnd(100000,999999);bridge.people.unshift({id,name:'新規登録',age:24,values:{'01-001':id}});bridge.setIndex(0);locks={};}for(const id of early)one(id);for(const f of fields)if(!early.includes(f.id))one(f.id);bridge.save();bridge.render();paint();}
 function paint(){const tabs=G('genTabs');tabs.replaceChildren();[...new Set(fields.map(f=>f.category))].forEach(g=>{const b=document.createElement('button');b.textContent=g;b.className=g===currentTab?'on':'';b.onclick=()=>{currentTab=g;paint()};tabs.append(b)});const box=G('genFields');box.replaceChildren();for(const f of fields.filter(x=>x.category===currentTab)){const wrap=document.createElement('div');wrap.className='gen-item'+(['history','textarea','multi'].includes(f.input_type)?' wide':'');const lab=document.createElement('label');lab.textContent=f.id+' · '+f.name;wrap.append(lab);let input;const t=f.input_type,cur=v(f.id);if(t==='textarea'||t==='history'||t==='multi'){input=document.createElement('textarea');input.rows=2;input.value=Array.isArray(cur)?cur.join('\n'):String(cur??'')}else if(t==='boolean'){input=document.createElement('input');input.type='checkbox';input.checked=!!cur}else{input=document.createElement('input');input.type=t==='number'||t==='computed'?'number':t==='date'?'date':t==='datetime'?'datetime-local':'text';input.value=cur??'';if(t==='image')input.placeholder='画像は本体の編集欄で登録';input.readOnly=t==='image'||t==='computed'}input.onchange=()=>{let x=t==='boolean'?input.checked:t==='number'?Number(input.value):t==='history'||t==='multi'?input.value.split('\n').filter(Boolean):input.value;put(f.id,x);locks[f.id]=true;persist();bridge.save();bridge.render();paint()};wrap.append(input);const row=document.createElement('div');row.className='gen-row';const roll=document.createElement('button');roll.textContent='↻ この項目';roll.disabled=!!locks[f.id]||t==='image'||t==='computed';roll.onclick=()=>{one(f.id);bridge.save();bridge.render();paint()};const lock=document.createElement('button');lock.className='subtle';lock.textContent=locks[f.id]?'🔒 固定中':'🔓 固定';lock.onclick=()=>{locks[f.id]=!locks[f.id];persist();paint()};row.append(roll,lock);wrap.append(row);box.append(wrap)}G('genSummary').textContent=`全${fields.length}項目／固定 ${Object.values(locks).filter(Boolean).length}項目／${bridge.people[bridge.getIndex()]?.name||''}（${bridge.people[bridge.getIndex()]?.age||''}歳）`;}
