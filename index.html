@@ -61,6 +61,9 @@
 .card .ufr-identity{font-size:9px!important;margin:0!important;overflow-wrap:anywhere}
 .card .ufr-note{grid-column:1/-1;display:block;margin:0 10px 9px;padding:6px 8px;background:#1a151a;border:1px solid #65434d;color:#d7bdbd;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:420px){.card .ufr-id-row{grid-template-columns:100px minmax(0,1fr)!important;gap:8px!important;padding:8px!important}.card .portrait,.card .portrait:has(.ufr-photo){width:100px!important;height:134px!important;min-height:134px!important;max-height:134px!important}.card .body h3{font-size:15px!important}.card .body .stats{gap:3px!important}}
+.ufr-portrait-meta{position:absolute;left:3px;right:3px;bottom:4px;display:flex;flex-direction:column;gap:3px;z-index:4;pointer-events:none}
+.ufr-portrait-meta span{background:rgba(22,13,20,.91);color:#e9c98e;border:1px solid #a98562;border-radius:3px;padding:3px 4px;font-size:10px;line-height:1.25;text-align:center;overflow-wrap:anywhere}
+.portrait{position:relative}
 </style><style>
 .ufr-admin-nav{padding:10px 18px;border-bottom:1px solid #6a414b;background:#1d141a;display:flex;justify-content:flex-end}
 .ufr-admin-nav a{font-size:13px;color:#f5d39d;text-decoration:none;border:1px solid #82515e;padding:9px 12px;border-radius:8px}
@@ -246,6 +249,30 @@ for(const card of cards){
    note.textContent+=' ／ 申告：登録情報を確認';
   }
  }
+}
+})();
+</script><script>
+(function(){
+'use strict';
+const getStored=()=>{
+ try{
+  const x=JSON.parse(localStorage.getItem('ufr-studio-v02')||localStorage.getItem('ufr-studio-v1')||'[]');
+  return Array.isArray(x)?x:Array.isArray(x.people)?x.people:[];
+ }catch(e){return []}
+};
+const people=getStored();
+for(const card of document.querySelectorAll('#cards .card')){
+ const portrait=card.querySelector('.portrait');
+ if(!portrait||portrait.querySelector('.ufr-portrait-meta'))continue;
+ const id=card.dataset.registryId||card.dataset.id;
+ const person=people.find(p=>String(p.id)===String(id)||String(p.values?.['01-001'])===String(id));
+ const v=person?.values||{};
+ const status=v['UFR-EX-01']||'未登録';
+ const verification=v['UFR-EX-04']||'未確認';
+ const meta=document.createElement('div');meta.className='ufr-portrait-meta';
+ const a=document.createElement('span');a.textContent='申告：'+status;
+ const b=document.createElement('span');b.textContent='確認：'+verification;
+ meta.append(a,b);portrait.append(meta);
 }
 })();
 </script></body></html>
