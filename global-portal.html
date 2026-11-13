@@ -92,7 +92,7 @@ people.forEach((p,i)=>{
  const photo=typeof v['01-012']==='string'&&/^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(v['01-012'])?v['01-012']:null;
  const card=document.createElement('article');
  card.className='card';card.dataset.registryId=String(p.id||v['01-001']||'');card.dataset.name=name;card.dataset.country=country;card.dataset.region=region;card.dataset.shape=type;card.dataset.score=score;card.dataset.id=id;
- card.innerHTML='<div class="ufr-id-row"><div class="portrait"><span class="tag">注目 '+safe(score)+'</span><span style="font-size:66px;color:#d5b7ad">◉</span></div><div class="body"><h3>'+safe(name)+'</h3><small>'+safe(p.id||v['01-001']||'登録番号未設定')+' · '+safe(age)+'歳 · '+safe(country)+' / '+safe(region)+'</small><div class="stats"><div>身長<b>'+safe(ht)+'cm</b></div><div>体型<b>'+safe(type)+'</b></div><div>注目指数<b>'+safe(score)+'</b></div><div>申告区分<b>'+safe(v['UFR-EX-01']||'未登録')+'</b></div></div><div class="actions"><button type="button" class="ufr-detail">詳細を見る</button><button type="button" class="outline ufr-compare">比較に追加</button></div></div></div>';
+ card.innerHTML='<div class="ufr-id-row"><div class="portrait"><span class="tag">注目 '+safe(score)+'</span><span style="font-size:66px;color:#d5b7ad">◉</span></div><div class="body"><h3>'+safe(name)+'</h3><small>'+safe(p.id||v['01-001']||'登録番号未設定')+' · '+safe(age)+'歳 · '+safe(country)+' / '+safe(region)+'</small><div class="stats"><div>身長<b>'+safe(ht)+'cm</b></div><div>体型<b>'+safe(type)+'</b></div><div>注目指数<b>'+safe(score)+'</b></div><div>処女区分<b>'+safe(v['UFR-EX-01']||'未登録')+'</b></div></div><div class="actions"><button type="button" class="ufr-detail">詳細を見る</button><button type="button" class="outline ufr-compare">比較に追加</button></div></div></div>';
  card.querySelector('.ufr-detail').addEventListener('click',()=>{
  const modal=document.getElementById('detail');
  const openBtn=document.createElement('a');
@@ -117,9 +117,9 @@ people.forEach((p,i)=>{
   });
  }
  const note=document.createElement('div');note.className='ufr-note';
- const declaration=String(v['UFR-EX-01']||'未登録');
+ const declaration=String(v['UFR-EX-01']||'不明').replace('未経験申告','処女').replace('経験申告','非処女');
  const objections=String(v['UFR-EX-03']??'0');
- note.textContent='備考：経験区分 '+declaration+' ／ 異議申立て '+objections+'件';
+ note.textContent='備考：処女区分 '+declaration+' ／ 通報 '+objections+'件';
  card.append(note);
  root.prepend(card);countryList.add(country);added++;
 });
