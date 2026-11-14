@@ -1,4 +1,4 @@
-const CACHE='ufr-studio-v47';
+const CACHE='ufr-studio-v4711';
 const ASSETS=['./','./index.html','./profile.html','./admin.html','./editor.html','./check.html','./pelvis-final.webp','./uterus-final.webp','./external-final.webp'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
