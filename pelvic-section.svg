@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" role="img" aria-label="女性骨盤の矢状断面模式図">
+<defs><radialGradient id="bg"><stop stop-color="#432532"/><stop offset="1" stop-color="#130f17"/></radialGradient><linearGradient id="tissue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e9b9ae"/><stop offset=".55" stop-color="#b77a8b"/><stop offset="1" stop-color="#754457"/></linearGradient><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#9d755d" stroke-opacity=".17" stroke-width="1"/></pattern></defs>
+<rect width="640" height="460" fill="url(#bg)"/><rect width="640" height="460" fill="url(#grid)"/>
+<g fill="none" stroke="#d9b77d" stroke-opacity=".5"><path d="M20 55V20H55M585 20H620V55M20 405V440H55M585 440H620V405"/><path d="M320 20V440" stroke-dasharray="3 9" opacity=".4"/></g>
+<text x="30" y="47" fill="#ebcb96" font-family="sans-serif" font-size="15" letter-spacing="2">UFR / PELVIC SECTION · SAGITTAL</text>
+<!-- posterior sacrum and spine -->
+<path d="M443 91C474 95 490 123 493 157L480 197 463 238 448 263 427 251 443 206 447 163 427 128Z" fill="#c9b5aa" stroke="#f5dcc0" stroke-width="3"/>
+<path d="M450 260L436 290 425 310" stroke="#e4cbbb" stroke-width="11" stroke-linecap="round"/>
+<!-- bladder anterior -->
+<path d="M158 224Q137 188 163 159Q203 126 242 157Q274 180 257 224Q227 260 186 248Z" fill="#9a7b83" stroke="#e7bdac" stroke-width="3"/>
+<path d="M204 245Q196 284 193 324" stroke="#cfa4a0" stroke-width="13" fill="none" stroke-linecap="round"/>
+<!-- uterus and cervix -->
+<path d="M291 102Q335 79 367 106Q385 125 377 158Q367 195 346 224L331 251Q320 263 309 251L290 220Q267 177 273 139Q273 116 291 102Z" fill="url(#tissue)" stroke="#f4d0b9" stroke-width="3"/>
+<path d="M309 121Q333 113 351 125Q354 159 334 199L325 217Q304 181 301 151Z" fill="#663346" stroke="#db9fa0" stroke-width="2"/>
+<path d="M312 251Q323 266 338 251L344 284Q326 300 310 284Z" fill="#a76478" stroke="#f0c1af" stroke-width="3"/>
+<!-- vagina: angled canal -->
+<path d="M312 283Q287 325 264 375L284 386Q316 336 343 289" fill="#7d485e" stroke="#e4aeb0" stroke-width="4" stroke-linejoin="round"/>
+<path d="M321 293L274 378" stroke="#d7a7a8" stroke-width="2" stroke-dasharray="4 5"/>
+<!-- rectum posterior -->
+<path d="M418 170Q397 213 411 252Q431 292 409 333L393 380" fill="none" stroke="#b68888" stroke-width="25" stroke-linecap="round"/>
+<path d="M418 170Q397 213 411 252Q431 292 409 333L393 380" fill="none" stroke="#714452" stroke-width="14" stroke-linecap="round"/>
+<!-- pubic bone -->
+<path d="M133 281Q145 261 166 275L176 306Q160 327 143 319Z" fill="#d8c5b7" stroke="#fff0d6" stroke-width="3"/>
+<!-- subtle silhouette -->
+<path d="M139 117Q114 192 127 270Q143 343 190 406L424 406Q471 330 489 266" fill="none" stroke="#ab7982" stroke-opacity=".5" stroke-width="2"/>
+<!-- gold leader lines -->
+<g fill="none" stroke="#e0bd82" stroke-width="1.5"><path d="M352 145H470L495 123H614"/><path d="M227 200H112L86 180H20"/><path d="M324 266H501L526 255H616"/><path d="M299 330H112L90 354H20"/><path d="M411 305H503L530 340H616"/></g>
+<g fill="#e9c88d" font-family="sans-serif" font-size="16"><text x="508" y="117">子宮</text><text x="24" y="173">膀胱</text><text x="531" y="249">子宮頸部</text><text x="24" y="371">膣</text><text x="536" y="355">直腸</text></g>
+<text x="28" y="430" fill="#bda084" font-size="12" font-family="sans-serif">模式図 / NOT PATIENT IMAGING</text>
+</svg>

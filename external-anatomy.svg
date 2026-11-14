@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="外陰部の形態を示す非個人の医療模式図">
+<defs><radialGradient id="bg"><stop stop-color="#462834"/><stop offset="1" stop-color="#171019"/></radialGradient><linearGradient id="outer" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d7a5a0"/><stop offset=".55" stop-color="#a66b7d"/><stop offset="1" stop-color="#744456"/></linearGradient><linearGradient id="inner" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dba8a6"/><stop offset="1" stop-color="#8d4d65"/></linearGradient><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#a17b65" stroke-opacity=".15"/></pattern></defs>
+<rect width="640" height="480" fill="url(#bg)"/><rect width="640" height="480" fill="url(#grid)"/>
+<text x="28" y="43" fill="#e8c58d" font-size="16" font-family="sans-serif" letter-spacing="2">UFR / EXTERNAL ANATOMY · SCHEMATIC</text>
+<g fill="none" stroke="#c39a70" opacity=".7"><path d="M18 68V18H68M572 18H622V68M18 412V462H68M572 462H622V412"/><path d="M318 66V431" stroke-dasharray="3 8" opacity=".5"/></g>
+<!-- outer labia with anatomic shape -->
+<path d="M306 106C270 99 233 142 223 199C208 276 238 359 291 395C302 399 314 387 313 370C289 315 280 245 290 179Q300 140 320 119Z" fill="url(#outer)" stroke="#f1c6b6" stroke-width="3"/>
+<path d="M334 106C370 99 407 142 417 199C432 276 402 359 349 395C338 399 326 387 327 370C351 315 360 245 350 179Q340 140 320 119Z" fill="url(#outer)" stroke="#f1c6b6" stroke-width="3"/>
+<!-- inner labia -->
+<path d="M315 161C288 183 285 222 299 270Q308 309 316 355Q324 329 317 286Q306 227 321 177Z" fill="url(#inner)" stroke="#f1bdba" stroke-width="2.2"/>
+<path d="M325 161C352 183 355 222 341 270Q332 309 324 355Q316 329 323 286Q334 227 319 177Z" fill="url(#inner)" stroke="#f1bdba" stroke-width="2.2"/>
+<!-- hood and clitoral glans -->
+<path d="M298 163Q319 133 342 163Q339 184 320 187Q302 183 298 163Z" fill="#b47786" stroke="#f2c4b5" stroke-width="2.5"/>
+<ellipse cx="320" cy="188" rx="8" ry="10" fill="#e4b5ab" stroke="#f5d2bd" stroke-width="2"/>
+<!-- openings, schematic -->
+<ellipse cx="320" cy="238" rx="5" ry="8" fill="#62384c" stroke="#d7a7a5" stroke-width="2"/>
+<path d="M320 266C305 290 305 316 320 338C335 316 335 290 320 266Z" fill="#6c3b51" stroke="#d8a4a5" stroke-width="2"/>
+<!-- leaders -->
+<g fill="none" stroke="#e6c58d" stroke-width="1.5"><path d="M298 162H194L163 134H24"/><path d="M280 250H158L134 280H24"/><path d="M344 250H476L502 232H620"/><path d="M329 188H479L508 124H620"/></g>
+<g fill="#ebcd97" font-family="sans-serif" font-size="17"><text x="26" y="125">陰核包皮</text><text x="26" y="301">大陰唇</text><text x="512" y="224">小陰唇</text><text x="512" y="116">陰核</text></g>
+<text x="25" y="446" fill="#c4a38e" font-size="12" font-family="sans-serif">解剖学的な共通模式図。形態の個人差は表現していません。</text>
+</svg>
