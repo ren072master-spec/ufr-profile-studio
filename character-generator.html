@@ -26,6 +26,17 @@ function set(id,v){values[id]=v;if(id==='01-005'){const d=new Date(v);if(!isNaN(
 function ageBirth(age){const y=today.getFullYear()-age;const m=rnd(1,12),d=rnd(1,28);return `${y}-${pad(m)}-${pad(d)}`}
 function generatedValue(f){
  const id=f.id,name=f.name,type=f.input_type;
+  // Fictional character settings: never inferred from a medical illustration.
+ const anatomyChoices={
+ 'UFR-AN-01':['対称','軽度左右差','左右差あり'],
+ 'UFR-AN-02':['内側に収まる','一部突出','突出'],
+ 'UFR-AN-03':['目立たない','軽度','明瞭'],
+ 'UFR-AN-04':['被覆多め','被覆少なめ','標準記録'],
+ 'UFR-RP-02':['類型A','類型B','類型C','類型D'],
+ 'UFR-RP-03':['A','B','C','D']
+ };
+ if(anatomyChoices[id])return choice(anatomyChoices[id]);
+ if(id==='UFR-RP-01')return +(rnd(245,315)/10).toFixed(1);
  if(type==='image')return '';
  if(id==='01-001')return 'UFR-JP-'+rnd(100000,999999);
  if(id==='01-002')return choice(surnames)+' '+choice(given)[0];
