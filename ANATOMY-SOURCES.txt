@@ -1,0 +1,32 @@
+UFR Studio 解剖CGの出典と利用条件
+
+骨盤
+Z-Anatomy（BodyParts3D / DBCLS 由来）の骨格モデルを atlas-proto から取得。
+Z-Anatomy — https://github.com/LluisV/Z-Anatomy
+配布ファイル — https://github.com/pernelluvsya/atlas-proto/blob/236f3a183108bcccc1f95fda1558be19d7486d00/SkeletalSystem100.glb
+帰属情報 — https://github.com/pernelluvsya/atlas-proto/blob/236f3a183108bcccc1f95fda1558be19d7486d00/ATTRIBUTION.md
+左右の寛骨・仙骨・尾骨を抽出し、構図・骨材質・照明・背景を設定してレンダリング。
+pelvis-atlas.webp とその縮小版は CC BY-SA 4.0。
+https://creativecommons.org/licenses/by-sa/4.0/
+
+子宮・付属器・膣
+依頼者提供の正面断面CG。画面用に縮小・WebP変換。
+第三者向けの再利用ライセンスおよび元の3Dモデルは未確認。
+
+外陰部
+We Are Beautiful — 746625-VLRN-1 — surface.stl（CC0 1.0）。
+https://commons.wikimedia.org/wiki/File:We_Are_Beautiful_%E2%80%93_746625-VLRN-1_%E2%80%93_surface.stl
+https://creativecommons.org/publicdomain/zero/1.0/
+STLのSHA-1　db61e04b71606111aa562ea0f9d478388e73d7bc
+表面STLをBlenderで、ローズ系材質と面光源を使用してレンダリング。
+取得した表面の端にフェードを適用。大陰唇・小陰唇・包皮付近と前庭の位置関係を示す。
+比較候補 489561-VLRN-1（CC0）も取得し、前庭周辺が見やすい746625を採用。
+https://commons.wikimedia.org/wiki/File:We_Are_Beautiful_%E2%80%93_489561-VLRN-1_%E2%80%93_surface.stl
+
+解剖学上の範囲
+外陰部は単一例の外表面。陰核体・脚などの内部構造は描写範囲外。
+外尿道口の輪郭と陰核亀頭・包皮の境界は画像だけで確定できない。
+骨盤CGは立体位置の参照用。子宮CGは模式的な正面断面で、断面の細部と
+各器官の比率について専門家による照合は行っていない。
+3枚とも登録者本人のスキャンや測定データとしては扱わない。
+解剖参照資料 — https://www.ncbi.nlm.nih.gov/books/NBK547703/
