@@ -37,6 +37,20 @@ function generatedValue(f){
  };
  if(anatomyChoices[id])return choice(anatomyChoices[id]);
  if(id==='UFR-RP-01')return +(rnd(245,315)/10).toFixed(1);
+ // Age-aware, internally coherent fictional records; no claim of clinical diagnosis.
+ if(id==='UFR-RP-04')return rnd(25,35);
+ if(id==='UFR-RP-05'){const age=Number(values['01-006'])||30;return +(Math.max(.3,(age<30?3.8:age<36?2.7:1.5)+rnd(-8,8)/10)).toFixed(1)}
+ if(id==='UFR-RP-06')return +(rnd(35,95)/10).toFixed(1);
+ if(id==='UFR-RP-07')return rnd(35,95);
+ if(id==='UFR-RP-08')return +(rnd(2,12)/10).toFixed(1);
+ if(id==='UFR-AN-05')return choice(['ピンクベージュ','ローズブラウン','ライトブラウン','ブラウン','ダークブラウン']);
+ if(id==='UFR-AN-06')return choice(['特記所見なし（架空検査）','軽度乾燥（架空検査）','未評価']);
+ if(id==='UFR-AN-07')return choice(['特記所見なし（架空検査）','未評価']);
+ if(id==='UFR-AN-08')return choice(['特記所見なし（架空検査）','未評価']);
+ if(id==='UFR-AN-09')return choice(['ピンクベージュ','ローズブラウン','ライトブラウン','ブラウン','ダークブラウン']);
+ if(id==='UFR-AN-10')return choice(['標準','低下','亢進','未評価']);
+ if(id==='UFR-AN-11')return choice(['所見なし','所見あり','未検査']);
+
  if(type==='image')return '';
  if(id==='01-001')return 'UFR-JP-'+rnd(100000,999999);
  if(id==='01-002')return choice(surnames)+' '+choice(given)[0];
